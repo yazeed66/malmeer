@@ -31,6 +31,11 @@ def Get_Flights_Data():
                     limit_of_retrieved_records) + "&arr_icao=" + str(Airportcode)
                     data = webUrl.read()
                     jsonData = json.loads(data)
-                    if
+                    if int(jsonData)["pagination"]["count"]>0:
+                       break
+                     else:
+                     print("No Data Found for the Airport Code you entered:" + str(AirportCode))
+
+                     with open(JsonFile,'w') as file:
             
             )
