@@ -6,48 +6,52 @@ import pickle
 import threading
 import urllib.request
 from datetime import datetime
-buffer_size =1000
-PORT = 55550
-encoding_type="utf-8"
-SERVER_IP="127.0.0.3"
+
+buffer_size = 10000
+PORT = 60000
+encoding_type = "utf-8"
+SERVER_IP = "127.0.0.3"
 SERVER = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-SERVER.Bind((SERVER_IP , PORT))
-NumOfAcceptedClients=10
-JsonFile="GI.json"
+SERVER.bind((SERVER_IP, PORT))
+NumOfAcceptedClients = 10
+JsonFile = "GI.json"
 ClientLists = []
 ShutDownServer = True
-accessKey = "a2824f8004d5a49d6c5118a51214a95e"
-LimitOfRetrievedRecords = 100
+access_key = "a2824f8004d5a49d6c5118a51214a95e"
+limit_of_retrieved_records = 100
 
-def Get_Flights_Data():
+
+def Get_Flgihts_Data():
     try:
         while True:
-            AirportCode=""
-            while AirportCode ==""
-            AirportCode=str(input("Enter the Airport Code"))
-            WebUrl = urllib.request.urlopen
-            (
+            Airport_code = ""
+            while Airport_code == "":
+                Airport_code = str(input("Enter airport code:"))
+            webUrl = urllib.request.urlopen(
                 "http://api.aviationstack.com/v1/flights?access_key=" + str(access_key) + "&limit=" + str(
-                    limit_of_retrieved_records) + "&arr_icao=" + str(Airportcode)
-                    data = webUrl.read()
-                    jsonData = json.loads(data)
-                    if int(jsonData)["pagination"]["count"]>0:
-                       break
-                     else:
-                     print("No Data Found for the Airport Code you entered:" + str(AirportCode))
+                    limit_of_retrieved_records) + "&arr_icao=" + str(Airport_code))
+            data = webUrl.read()
+            json_data = json.loads(data)
+            if int(json_data["pagination"]["count"]) > 0:
+                break
+            else:
+                print("ERROR :There is No Data Found For Airport Code :" + str(Airport_code))
+        print("[" + str(datetime.now()) + "]" + " - " + JsonFile + " -  FLIGHTS FOR AIRPORT : (" + str(
+            Airport_code) + ") IS DOWNLOADED ")
+        print("[" + str(datetime.now()) + "]" + " - " + str(json_data["pagination"]["count"]) + "  DATA RETRIEVED ")
 
-                     with open(JsonFile,'w') as file:
-                 json.dump(jsonData, file, indent=4)
-        
-            
+        with open(JsonFile, 'w') as File:
+            json.dump(json_data, File, indent=4)
     except:
         print("[" + str(datetime.now()) + "]" + " - " + "Error While Saving FLIGHTS DATA!")
         sys.exit(0)
 def SERVER_SHUTDOWN():
     global SERVER
-    print("SERVER IS SHUTINGDOWN.....")
+    print("SERVER IS SHUTTING DOWN...")
     SERVER.close()
-    os._exit(0)
+    os.exit(0)
+
+
 def Get_All_Arrived_Flights():
     try:
         Search_Flag = False
@@ -65,14 +69,16 @@ def Get_All_Arrived_Flights():
                     else:
                         Response.append(str(x["arrival"]["terminal"]))
                     Search_Flag = True
-        if Search_Flag == True:
+        if Search_Flag:
             return pickle.dumps(Response)
         else:
-            return pickle.dumps("There is no Arrived Flights !")
+            return pickle.dumps("There are no arrived flights!")
     except Exception as e:
-        print("[" + str(datetime.now()) + "]" + " - " + "Error While Getting Arrived Flights!")
-        return pickle.dumps("Excepetion Result : " + str(e) + "[" + str(
-            datetime.now()) + "]" + " - " + "Error While Getting Arrived Flights!")
+        print("[" + str(datetime.now()) + "]" + " - " + "Error while getting arrived flights!")
+        return pickle.dumps("Exception Result: " + str(e) + " [" + str(datetime.now()) + "]" + " - " +
+                            "Error while getting arrived flights!")
+
+
 # Get All Delayed Flights
 def Get_All_Delayed_Flights():
     try:
@@ -81,7 +87,7 @@ def Get_All_Delayed_Flights():
         with open(JsonFile) as f:
             data = json.load(f)
             for x in data["data"]:
-                 if str(x["departure"]["delay"]) != "None":
+                if str(x["departure"]["delay"]) != "None":
                     Response.append(x["flight"]["iata"])
                     Response.append(x["departure"]["airport"])
                     Response.append(x["departure"]["estimated"])
@@ -90,17 +96,16 @@ def Get_All_Delayed_Flights():
                     if x["arrival"]["terminal"] == None or x["arrival"]["terminal"] == "" or str(
                             x["arrival"]["terminal"]) == "null":
                         Response.append("None")
-                    else:
-                        Response.append(x["arrival"]["terminal"])
-                    Search_Flag = True
-        if Search_Flag == True:
+        if Search_Flag:
             return pickle.dumps(Response)
         else:
-            return pickle.dumps("There is no Delayed Flights !")
+            return pickle.dumps("There are no delayed flights!")
     except Exception as e:
-        print("[" + str(datetime.now()) + "]" + " - " + "Error While Getting Delayed Flights!")
-        return pickle.dumps("Excepetion Result : " + str(e) + "[" + str(
-            datetime.now()) + "]" + " - " + "Error While Getting Delayed Flights!")
+        print("[" + str(datetime.now()) + "]" + " - " + "Error while getting delayed flights!")
+        return pickle.dumps("Exception Result: " + str(e) + " [" + str(datetime.now()) + "]" + " - " +
+                            "Error while getting delayed flights!")
+
+
 def Get_Flights_From_Specific_City(City_Name):
     try:
         Search_Flag = False
@@ -128,6 +133,8 @@ def Get_Flights_From_Specific_City(City_Name):
         print("[" + str(datetime.now()) + "]" + " - " + "Error While Getting Flights From " + City_Name + "!")
         return pickle.dumps("Excepetion Result : " + str(e) + "[" + str(
             datetime.now()) + "]" + " - " + "Error While Getting Flights From " + City_Name + "!")
+
+
 def Get_Details_of_Particular_Flight(Flight_IATA):
     try:
         Search_Flag = False
@@ -155,6 +162,8 @@ def Get_Details_of_Particular_Flight(Flight_IATA):
             datetime.now()) + "]" + " - " + "Error While Getting Flight Number: " + Flight_IATA + "!")
         return pickle.dumps("Excepetion Result : " + str(e) + "[" + str(
             datetime.now()) + "]" + " - " + "Error While Getting Flight Number: " + Flight_IATA + "!")
+
+
 def define_connection(connection, name):
     ClientLists.append(name)
     print("[" + str(datetime.now()) + "]" + " - ", name, " IS CONNECTED NOW ")
@@ -192,6 +201,8 @@ def define_connection(connection, name):
             if (int(threading.activeCount()) - 1) == 1 and ShutDownServer == True:
                 SERVER_SHUTDOWN()
             break
+
+
 def start_new_connection():
     global SERVER
     SERVER.listen(NumOfAcceptedClients)
@@ -203,5 +214,7 @@ def start_new_connection():
             continue
         thread = threading.Thread(target=define_connection, args=(connection, Client_Name))
         thread.start()
-Get_Flights_Data()
+
+
+Get_Flgihts_Data()
 start_new_connection()
