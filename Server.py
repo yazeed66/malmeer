@@ -20,7 +20,7 @@ ShutDownServer = True
 access_key = "a2824f8004d5a49d6c5118a51214a95e"
 limit_of_retrieved_records = 100
 
-
+# Get All Flgihts Data
 def Get_Flgihts_Data():
     try:
         while True:
@@ -51,7 +51,7 @@ def SERVER_SHUTDOWN():
     SERVER.close()
     os.exit(0)
 
-
+# Get All Arrived Flights
 def Get_All_Arrived_Flights():
     try:
         Search_Flag = False
@@ -105,7 +105,7 @@ def Get_All_Delayed_Flights():
         return pickle.dumps("Exception Result: " + str(e) + " [" + str(datetime.now()) + "]" + " - " +
                             "Error while getting delayed flights!")
 
-
+# Get  Flights From Specific City
 def Get_Flights_From_Specific_City(City_Name):
     try:
         Search_Flag = False
@@ -134,7 +134,7 @@ def Get_Flights_From_Specific_City(City_Name):
         return pickle.dumps("Excepetion Result : " + str(e) + "[" + str(
             datetime.now()) + "]" + " - " + "Error While Getting Flights From " + City_Name + "!")
 
-
+#Get Details of Particular Flight
 def Get_Details_of_Particular_Flight(Flight_IATA):
     try:
         Search_Flag = False
@@ -163,7 +163,8 @@ def Get_Details_of_Particular_Flight(Flight_IATA):
         return pickle.dumps("Excepetion Result : " + str(e) + "[" + str(
             datetime.now()) + "]" + " - " + "Error While Getting Flight Number: " + Flight_IATA + "!")
 
-
+#connection
+#in this part we will see the connection frome 1 to 6 ((loges)) 
 def define_connection(connection, name):
     ClientLists.append(name)
     print("[" + str(datetime.now()) + "]" + " - ", name, " IS CONNECTED NOW ")
@@ -202,7 +203,7 @@ def define_connection(connection, name):
                 SERVER_SHUTDOWN()
             break
 
-
+#the server ready or not 
 def start_new_connection():
     global SERVER
     SERVER.listen(NumOfAcceptedClients)
