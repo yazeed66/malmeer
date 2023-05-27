@@ -37,5 +37,49 @@ def Get_Flights_Data():
                      print("No Data Found for the Airport Code you entered:" + str(AirportCode))
 
                      with open(JsonFile,'w') as file:
+                 json.dump(jsonData, file, indent=4)
+        
+            
+    except:
+        print("[" + str(datetime.now()) + "]" + " - " + "Error While Saving FLIGHTS DATA!")
+        sys.exit(0)
+def SERVER_SHUTDOWN():
+    global SERVER
+    print("SERVER IS SHUTINGDOWN.....")
+    SERVER.close()
+    os._exit(0)
+def Get_All_Arrived_Flights():
+    try:
+        Search_Flag = False
+        Response = []
+        with open(JsonFile) as f:
+            data = json.load(f)
+            for x in data["data"]:
+                if str(x["flight_status"]) == "landed":
+                    Response.append(x["flight"]["iata"])
+                    Response.append(x["departure"]["airport"])
+                    Response.append(x["arrival"]["estimated"])
+                    Response.append(str(x["arrival"]["gate"]))
+                    if x["arrival"]["terminal"] == "":
+                        Response.append("NULL")
+                    else:
+                        Response.append(str(x["arrival"]["terminal"]))
+                    Search_Flag = True
+        if Search_Flag == True:
+            return pickle.dumps(Response)
+        else:
+            return pickle.dumps("There is no Arrived Flights !")
+    except Exception as e:
+        print("[" + str(datetime.now()) + "]" + " - " + "Error While Getting Arrived Flights!")
+        return pickle.dumps("Excepetion Result : " + str(e) + "[" + str(
+            datetime.now()) + "]" + " - " + "Error While Getting Arrived Flights!")
+# Get All Delayed Flights
+def Get_All_Delayed_Flights():
+    try:
+        Search_Flag = False
+        Response = []
+        with open(JsonFile) as f:
+            data = json.load(f)
+            for x in data["data"]:
             
             )
