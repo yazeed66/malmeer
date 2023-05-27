@@ -10,7 +10,7 @@ from datetime import datetime
 buffer_size = 10000
 PORT = 60000
 encoding_type = "utf-8"
-SERVER_IP = "127.0.0.3"
+SERVER_IP = "127.0.0.1"
 SERVER = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 SERVER.bind((SERVER_IP, PORT))
 NumOfAcceptedClients = 10
@@ -20,13 +20,13 @@ ShutDownServer = True
 access_key = "a2824f8004d5a49d6c5118a51214a95e"
 limit_of_retrieved_records = 100
 
-# Get All Flgihts Data
+
 def Get_Flgihts_Data():
     try:
         while True:
             Airport_code = ""
             while Airport_code == "":
-                Airport_code = str(input("Enter airport code:"))
+                Airport_code = str(input("Enter the airport code here please: "))
             webUrl = urllib.request.urlopen(
                 "http://api.aviationstack.com/v1/flights?access_key=" + str(access_key) + "&limit=" + str(
                     limit_of_retrieved_records) + "&arr_icao=" + str(Airport_code))
@@ -35,23 +35,23 @@ def Get_Flgihts_Data():
             if int(json_data["pagination"]["count"]) > 0:
                 break
             else:
-                print("ERROR :There is No Data Found For Airport Code :" + str(Airport_code))
+                print("There is an ERROR and No Data Found For Airport Code :" + str(Airport_code))
         print("[" + str(datetime.now()) + "]" + " - " + JsonFile + " -  FLIGHTS FOR AIRPORT : (" + str(
-            Airport_code) + ") IS DOWNLOADED ")
-        print("[" + str(datetime.now()) + "]" + " - " + str(json_data["pagination"]["count"]) + "  DATA RETRIEVED ")
+            Airport_code) + ") has been successfully downloaded  ")
+        print("[" + str(datetime.now()) + "]" + " - " + str(json_data["pagination"]["count"]) + " The data has been retrieved successfully.")
 
         with open(JsonFile, 'w') as File:
             json.dump(json_data, File, indent=4)
     except:
-        print("[" + str(datetime.now()) + "]" + " - " + "Error While Saving FLIGHTS DATA!")
+        print("[" + str(datetime.now()) + "]" + " - " + "While Saving FLIGHTS DATA there is Error")
         sys.exit(0)
 def SERVER_SHUTDOWN():
     global SERVER
-    print("SERVER IS SHUTTING DOWN...")
+    print("THE SERVER IS GOING TO SHUT DOWN...")
     SERVER.close()
     os.exit(0)
 
-# Get All Arrived Flights
+
 def Get_All_Arrived_Flights():
     try:
         Search_Flag = False
@@ -72,11 +72,11 @@ def Get_All_Arrived_Flights():
         if Search_Flag:
             return pickle.dumps(Response)
         else:
-            return pickle.dumps("There are no arrived flights!")
+            return pickle.dumps(" No arrived flights!")
     except Exception as e:
-        print("[" + str(datetime.now()) + "]" + " - " + "Error while getting arrived flights!")
+        print("[" + str(datetime.now()) + "]" + " - " + "here was an error related to the arrival of flights!")
         return pickle.dumps("Exception Result: " + str(e) + " [" + str(datetime.now()) + "]" + " - " +
-                            "Error while getting arrived flights!")
+                            "here was an error related to the arrival of flights!")
 
 
 # Get All Delayed Flights
@@ -99,13 +99,13 @@ def Get_All_Delayed_Flights():
         if Search_Flag:
             return pickle.dumps(Response)
         else:
-            return pickle.dumps("There are no delayed flights!")
+            return pickle.dumps("No delayed flights!")
     except Exception as e:
-        print("[" + str(datetime.now()) + "]" + " - " + "Error while getting delayed flights!")
+        print("[" + str(datetime.now()) + "]" + " - " + "here was an error in obtaining information about flight delays!")
         return pickle.dumps("Exception Result: " + str(e) + " [" + str(datetime.now()) + "]" + " - " +
-                            "Error while getting delayed flights!")
+                            "here was an error in obtaining information about flight delays!")
 
-# Get  Flights From Specific City
+
 def Get_Flights_From_Specific_City(City_Name):
     try:
         Search_Flag = False
@@ -128,13 +128,13 @@ def Get_Flights_From_Specific_City(City_Name):
         if Search_Flag == True:
             return pickle.dumps(Response)
         else:
-            return pickle.dumps("There is no Flights Comes from: (" + str(City_Name) + ")!")
+            return pickle.dumps("No Flights Comes from: (" + str(City_Name) + ")!")
     except Exception as e:
-        print("[" + str(datetime.now()) + "]" + " - " + "Error While Getting Flights From " + City_Name + "!")
+        print("[" + str(datetime.now()) + "]" + " - " + "  Getting Flights Error From " + City_Name + "!")
         return pickle.dumps("Excepetion Result : " + str(e) + "[" + str(
-            datetime.now()) + "]" + " - " + "Error While Getting Flights From " + City_Name + "!")
+            datetime.now()) + "]" + " - " + "Getting Flights Error From " + City_Name + "!")
 
-#Get Details of Particular Flight
+
 def Get_Details_of_Particular_Flight(Flight_IATA):
     try:
         Search_Flag = False
@@ -159,16 +159,15 @@ def Get_Details_of_Particular_Flight(Flight_IATA):
             return pickle.dumps("IATA Flight: (" + str(Flight_IATA) + ") Not Found!")
     except Exception as e:
         print("Excepetion Result : " + str(e) + "[" + str(
-            datetime.now()) + "]" + " - " + "Error While Getting Flight Number: " + Flight_IATA + "!")
+            datetime.now()) + "]" + " - " + "Error whene Getting Flight Number: " + Flight_IATA + "!")
         return pickle.dumps("Excepetion Result : " + str(e) + "[" + str(
-            datetime.now()) + "]" + " - " + "Error While Getting Flight Number: " + Flight_IATA + "!")
+            datetime.now()) + "]" + " - " + "Error whene Getting Flight Number: " + Flight_IATA + "!")
 
-#connection
-#in this part we will see the connection frome 1 to 6 ((loges)) 
+
 def define_connection(connection, name):
     ClientLists.append(name)
-    print("[" + str(datetime.now()) + "]" + " - ", name, " IS CONNECTED NOW ")
-    print("[" + str(datetime.now()) + "]" + " - ACTIVE CLIENTS: " + str(ClientLists))
+    print("[" + str(datetime.now()) + "]" + " -  USER ", name, " CONNECTED   ")
+    print("[" + str(datetime.now()) + "]" + " - ACTIVE USER: " + str(ClientLists))
     connection.sendall(pickle.dumps(ClientLists))
     while True:
         received_option = connection.recv(buffer_size).decode(encoding_type)
@@ -181,7 +180,7 @@ def define_connection(connection, name):
         elif str(received_option) == "3":
             print("[" + str(datetime.now()) + "]" + " - " + name + " SELECT OPTION : " + str(received_option))
             Recived_City = connection.recv(buffer_size).decode(encoding_type)
-            print("[" + str(datetime.now()) + "]" + " - " + name + " ASK ABOUT CITY : " + str(Recived_City))
+            print("[" + str(datetime.now()) + "]" + " - " + name + " ASK ABOUT THE CITY : " + str(Recived_City))
             connection.sendall(Get_Flights_From_Specific_City(Recived_City))
         elif str(received_option) == "4":
             print("[" + str(datetime.now()) + "]" + " - " + name + " SELECT OPTION : " + str(received_option))
@@ -196,18 +195,18 @@ def define_connection(connection, name):
             print("[" + str(datetime.now()) + "]" + " - " + name + " SELECT OPTION : " + str(received_option))
             ClientLists.remove(name)
             connection.sendall(pickle.dumps(ClientLists))
-            print("[" + str(datetime.now()) + "]" + " - " + name + " IS DISCONNECTED")
-            print("[" + str(datetime.now()) + "]" + " - ACTIVE CLIENTS: " + str(ClientLists))
+            print("[" + str(datetime.now()) + "]" + " - " + name + "  DISCONNECTED ]: ")
+            print("[" + str(datetime.now()) + "]" + " - ACTIVE USER: " + str(ClientLists))
             connection.close()
             if (int(threading.activeCount()) - 1) == 1 and ShutDownServer == True:
                 SERVER_SHUTDOWN()
             break
 
-#the server ready or not 
+
 def start_new_connection():
     global SERVER
     SERVER.listen(NumOfAcceptedClients)
-    print("[" + str(datetime.now()) + "]" + " <<<<<<< server is starting >>>>>")
+    print("[" + str(datetime.now()) + "]" + " <<<<<<The server is beginning its startup process>>>>>>")
     while True:
         connection, address = SERVER.accept()
         Client_Name = connection.recv(buffer_size).decode(encoding_type)
