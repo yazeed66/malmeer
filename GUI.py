@@ -155,3 +155,67 @@ class Flighs_App:
         Exit_Button["text"] = "EXIT"
         Exit_Button.place(x=180, y=350, width=50, height=50)
         Exit_Button["command"] = self.Client_Window_Destroy
+        
+        Active_Clients_Button = tk.Button(root)
+        Active_Clients_Button["bg"] = "Maroon"
+        Active_Clients_Button["font"] = Font
+        Active_Clients_Button["fg"] = "white"
+        Active_Clients_Button["justify"] = "center"
+        Active_Clients_Button["text"] = "ALL ACTIVE CLIENTS"
+        Active_Clients_Button.place(x=120, y=280, width=200, height=50)
+        Active_Clients_Button["command"] = self.Get_Active_Client
+
+
+
+        Arrived_Flights_Button=tk.Button(root)
+        Arrived_Flights_Button["bg"] = "black"
+        Arrived_Flights_Button["font"] = Font
+        Arrived_Flights_Button["fg"] = "white"
+        Arrived_Flights_Button["justify"] = "center"
+        Arrived_Flights_Button["text"] = "Get All Arrived Flights"
+        Arrived_Flights_Button.place(x=10,y=10,width=380,height=50)
+        Arrived_Flights_Button["command"] = self.Get_Arrived_Flights
+
+
+
+        City_Flights_Button = tk.Button(root)
+        City_Flights_Button["bg"] = "Blue"
+        City_Flights_Button["font"] = Font
+        City_Flights_Button["fg"] = "white"
+        City_Flights_Button["justify"] = "center"
+        City_Flights_Button["text"] = "Get Flights From Specific City"
+        City_Flights_Button.place(x=10, y=130, width=380, height=50)
+        City_Flights_Button["command"] = self.Get_Flights_By_City_Name
+
+
+
+        Delayed_Flights_Button=tk.Button(root)
+        Delayed_Flights_Button["bg"] = "Grey"
+        Delayed_Flights_Button["font"] = Font
+        Delayed_Flights_Button["fg"] = "white"
+        Delayed_Flights_Button["justify"] = "center"
+        Delayed_Flights_Button["text"] = "Get All Delayed Flights"
+        Delayed_Flights_Button.place(x=10,y=65,width=380,height=50)
+        Delayed_Flights_Button["command"] = self.Get_Delayed_Flights
+
+
+
+        Spicific_Flight_Button = tk.Button(root)
+        Spicific_Flight_Button["bg"] = "Green"
+        Spicific_Flight_Button["font"] = Font
+        Spicific_Flight_Button["fg"] = "white"
+        Spicific_Flight_Button["justify"] = "center"
+        Spicific_Flight_Button["text"] = "Particular Flight Details"
+        Spicific_Flight_Button.place(x=10, y=205, width=380, height=50)
+        Spicific_Flight_Button["command"] = self.Get_Flight_By_Flight_Number
+
+
+
+
+        
+        Client_Name = self.Get_User_Name()
+        root.title(str(Client_Name) + " - API Flights System")
+if __name__ == "__main__":
+    root = tk.Tk()
+    Flighs_App = Flighs_App(root)
+    root.mainloop()
